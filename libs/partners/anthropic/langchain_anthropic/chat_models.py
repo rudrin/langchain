@@ -483,20 +483,19 @@ def _format_messages(
     formatted_messages: list[dict] = []
     merged_messages = _merge_messages(messages)
     for _i, message in enumerate(merged_messages):
-        if message.type == "system":
-            if system is None:
-                if isinstance(message.content, list):
-                    system = [
-                        (
-                            block
-                            if isinstance(block, dict)
-                            else {"type": "text", "text": block}
-                        )
-                        for block in message.content
-                    ]
-                else:
-                    system = message.content
-                continue
+        if message.type == "system" and system is None:
+            if isinstance(message.content, list):
+                system = [
+                    (
+                        block
+                        if isinstance(block, dict)
+                        else {"type": "text", "text": block}
+                    )
+                    for block in message.content
+                ]
+            else:
+                system = message.content
+            continue
 
         role = _message_type_lookups[message.type]
         content: str | list
